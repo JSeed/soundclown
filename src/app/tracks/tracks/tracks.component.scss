@@ -1,0 +1,11 @@
+.tracks-wrapper {
+  @apply flex flex-col justify-center m-8;
+}
+
+.track-row {
+  @apply flex py-4 px-6  bg-white hover:text-purple-400 cursor-pointer;
+
+  .track-title {
+    @apply text-lg ;
+  }
+}
