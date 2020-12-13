@@ -22,7 +22,7 @@ export class TracksService {
         const matches = event.url.match('\/tracks\/(.+)');
         return matches ? matches[1] : null;
       }),
-      shareReplay(),
+      shareReplay(1),
     );
 
     this.tracks$ = this.tracksApi.getTrackList().pipe(
