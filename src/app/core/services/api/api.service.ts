@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable} from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
-import { PathResolver } from '../../utill/path-resolver';
+import { PathResolver } from '../../util/path-resolver';
 
 /**
  * Service for interacting with the REST API

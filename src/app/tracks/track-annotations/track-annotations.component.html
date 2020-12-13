@@ -1,0 +1,18 @@
+<div class="annotations">
+
+  <div *ngFor="let annotation of annotations$ | async" class="annotation" (click)="annotationClicked(annotation)">
+    <div class="header">
+      <span class="user">
+        {{ annotation.user }}
+      </span>
+      <span class="time">
+        {{ annotation.seconds }}
+      </span>
+
+    </div>
+    <div class="message">
+      {{ annotation.message }}
+    </div>
+  </div>
+
+</div>

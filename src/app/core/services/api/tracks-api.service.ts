@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Track } from '../../models/track';
 import { ApiService } from './api.service';
-import { PathResolver } from '../../utill/path-resolver';
+import { PathResolver } from '../../util/path-resolver';
 
 @Injectable({
   providedIn: 'root',

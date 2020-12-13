@@ -9,6 +9,7 @@ export class WaveSurferService implements OnDestroy {
 
   private playingSubject = new BehaviorSubject(false);
   playing$ = this.playingSubject.asObservable();
+
   initialize(element: HTMLElement, url): void {
     this.wavesurfer = WaveSurfer.create({
       container: element,
@@ -32,8 +33,13 @@ export class WaveSurferService implements OnDestroy {
   isPlaying() {
     return this.wavesurfer.isPlaying();
   }
+
   togglePlayback() {
     this.wavesurfer.playPause();
+  }
+
+  jumpToSeconds(seconds: number) {
+    this.wavesurfer.play(seconds);
   }
 
   ngOnDestroy() {
@@ -41,4 +47,5 @@ export class WaveSurferService implements OnDestroy {
       this.wavesurfer.destroy();
     }
   }
+
 }

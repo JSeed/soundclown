@@ -1,0 +1,31 @@
+:host {
+  width: 100%;
+}
+.annotations {
+  @apply flex flex-col justify-center m-8 ;
+
+  .annotation {
+    @apply flex flex-col py-4 px-6  bg-white hover:text-purple-400 cursor-pointer my-2;
+
+    .header {
+      @apply flex justify-between;
+
+      .user {
+
+        @apply text-lg font-medium;
+      }
+
+      .time {
+
+        @apply font-light;
+      }
+    }
+
+    .message {
+      @apply text-sm
+    }
+
+  }
+
+}
+
