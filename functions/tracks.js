@@ -5,6 +5,8 @@ const endpoint = new AWS.Endpoint(process.env.BUCKET_ENDPOINT);
 const credentials = new AWS.Credentials(process.env.BUCKET_ACCESS_KEY, process.env.BUCKET_SECRET_KEY);
 const s3 = new AWS.S3({ endpoint, credentials });
 
+// TODO - decode [source: https://gist.github.com/jhurliman/1250118/09d7e584ddba7f7c37fd028d2d704497c06d1916]
+const encodeId = (val) => new Buffer(val).toString('base64').replace('+', '-').replace('/', '_').replace(/=+$/, '');
 
 const returnStatus = (statusCode) => ({ statusCode });
 const successResponse = (body) => ({ ...returnStatus(200), body: JSON.stringify(body)});
@@ -20,7 +22,7 @@ const getTrackList = async () => {
     objects.Contents
       .filter((object) => object.Size > 0)
       .map(async (object) => ({
-        id: new Buffer(object.Key).toString('base64'),
+        id: encodeId(object.Key),
         title: object.Key.split('/').pop(),
         url: await s3.getSignedUrlPromise('getObject', {
           Bucket: process.env.BUCKET_NAME,
@@ -28,7 +30,6 @@ const getTrackList = async () => {
         }),
       })));
 
-  console.log(tracks);
   return successResponse(tracks);
 }
 
