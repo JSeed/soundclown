@@ -1,0 +1,4 @@
+<form [formGroup]="form" (submit)="handleSubmit()" class="flex flex-col items-center px-16">
+  <textarea formControlName="message" class="w-full shadow-inner p-4 border-0 mt-8 mb-4 rounded-lg focus:shadow-outline text-l" placeholder="Add a comment..."></textarea>
+  <button [disabled]="pending || this.form.invalid" type="submit" class="disabled:opacity-20 w-full bg-purple-400 text-white rounded-lg py-2 py-2 font-bold ">Add Comment</button>
+</form>

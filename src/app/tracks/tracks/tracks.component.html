@@ -1,5 +1,3 @@
-
-
 <div class="tracks-wrapper">
   <div *ngFor="let track of tracksService.tracks$ | async" class="track-row" (click)="tracksService.selectTrack(track)">
     <a  class="track-title"  >{{ track.title }}</a>

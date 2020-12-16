@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { TracksService } from './tracks.service';
 import { AnnotationsApiService } from './api/annotations-api.service';
 import { filter, shareReplay, switchMap } from 'rxjs/operators';
-import { Annotation } from '../models/annotation';
+import { Annotation, CreateAnnotationRequest } from '../models/annotation';
 
 @Injectable({ providedIn: 'root' })
 export class AnnotationsService {
@@ -22,6 +22,9 @@ export class AnnotationsService {
     );
   }
 
+  createAnnotation(annotation: CreateAnnotationRequest): Observable<Annotation> {
+    return this.annotationsApi.createAnnotation(annotation);
+  }
 
 
 }
