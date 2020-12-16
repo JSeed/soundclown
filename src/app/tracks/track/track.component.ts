@@ -4,13 +4,14 @@ import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { WaveSurferService } from '../wavesurfer.service';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
+import { ResizeObserverService } from '../../core/services/resize-observer.service';
 
 
 @Component({
   selector: 'sc-track',
   templateUrl: './track.component.html',
   styleUrls: ['./track.component.scss'],
-  viewProviders: [WaveSurferService]
+  viewProviders: [WaveSurferService, ResizeObserverService]
 })
 export class TrackComponent implements AfterContentInit {
 

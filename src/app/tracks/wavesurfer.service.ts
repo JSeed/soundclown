@@ -1,6 +1,8 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import WaveSurfer from 'wavesurfer.js';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { ResizeObserverService } from '../core/services/resize-observer.service';
+import { debounceTime } from 'rxjs/operators';
 
 @Injectable()
 export class WaveSurferService implements OnDestroy {
@@ -9,6 +11,12 @@ export class WaveSurferService implements OnDestroy {
 
   private playingSubject = new BehaviorSubject(false);
   playing$ = this.playingSubject.asObservable();
+
+  private subscriptions = new Subscription();
+
+  constructor(
+    private resizeObserver: ResizeObserverService,
+  ) {}
 
   initialize(element: HTMLElement, url, peaks?): void {
     this.wavesurfer = WaveSurfer.create({
@@ -21,6 +29,10 @@ export class WaveSurferService implements OnDestroy {
       height: 200,
       barGap: 3
     });
+
+    this.subscriptions.add(
+      this.resizeObserver.observe(element).pipe(debounceTime(100)).subscribe(() => this.wavesurfer.drawBuffer())
+    );
 
     this.wavesurfer.on('pause', () => this.playingSubject.next(false));
     this.wavesurfer.on('play', () => this.playingSubject.next(true));
@@ -36,11 +48,12 @@ export class WaveSurferService implements OnDestroy {
     this.wavesurfer.playPause();
   }
 
-  jumpToSeconds(seconds: number) {
+  jumpToSeconds(seconds: number): void {
     this.wavesurfer.play(seconds);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
     if (this.wavesurfer) {
       this.wavesurfer.destroy();
     }
