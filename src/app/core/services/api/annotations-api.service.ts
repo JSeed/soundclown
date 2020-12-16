@@ -23,4 +23,8 @@ export class AnnotationsApiService {
   listTrackAnnotations(trackId: string): Observable<Annotation[]> {
     return this.api.get(this.pathResolver.resolve(), { trackId });
   }
+
+  deleteTrackAnnotations(trackId: string, annotationId: string): Observable<void> {
+    return this.api.delete(this.pathResolver.resolve(), { trackId, annotationId });
+  }
 }

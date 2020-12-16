@@ -20,7 +20,11 @@ export class TrackAnnotationsComponent {
     this.annotations$ = this.annotationsService.annotations$;
   }
 
-  annotationClicked(annotation: Annotation) {
+  annotationClicked(annotation: Annotation): void {
     this.waveSurfer.jumpToSeconds(annotation.seconds);
+  }
+
+  deleteAnnotation(annotation: Annotation): void {
+    this.annotationsService.deleteAnnotation(annotation).subscribe(() => {});
   }
 }

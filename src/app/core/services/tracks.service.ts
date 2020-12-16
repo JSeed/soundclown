@@ -20,11 +20,9 @@ const initialState: TracksState = {
 export class TracksService extends StateService<TracksState> implements OnDestroy {
 
   tracks$: Observable<Track[]> = this.select(state => state.tracks);
-  selectedTrackId$: Observable<string> = this.select(state => state.selectedTrackId);
   selectedTrack$: Observable<Track> = this.select((state) => {
     return this.state.tracks.find((track) => track.id === state.selectedTrackId);
   });
-
 
   private subscriptions = new Subscription();
 
@@ -36,6 +34,7 @@ export class TracksService extends StateService<TracksState> implements OnDestro
 
     this.load();
 
+    // Set the selected track based on the router URL
     this.subscriptions.add(this.router.events.pipe(
       filter<NavigationStart>((event) => event instanceof NavigationStart),
     ).subscribe((event) => {
@@ -62,7 +61,7 @@ export class TracksService extends StateService<TracksState> implements OnDestro
     this.router.navigate(['tracks']);
   }
 
-  private parseUrlTrackId(url) {
+  private parseUrlTrackId(url): string {
     const matches = url.match('\/tracks\/(.+)');
     return matches ? matches[1] : null;
   }

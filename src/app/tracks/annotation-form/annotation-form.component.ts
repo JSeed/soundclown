@@ -33,11 +33,11 @@ export class AnnotationFormComponent implements OnInit {
       this.annotationsService.createAnnotation({
         message: this.form.get('message').value,
         seconds: this.wavesurfer.wavesurfer.getCurrentTime(),
-        user: 'Jon', // TODO - profile service
+        user: 'unknown', // TODO - profile service
         trackId: this.trackId,
-      }).subscribe((annotation) => {
-        // TODO - this sucks, update the page dynamically in the state service
-        window.location.reload();
+      }).subscribe(() => {
+        this.form.reset();
+        this.pending = false;
       }, (err) => {
         console.error('Failed to create annotation:', err);
         this.pending = false;

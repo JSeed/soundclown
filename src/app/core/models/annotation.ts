@@ -1,6 +1,7 @@
 
 export interface Annotation {
   id: string;
+  trackId: string;
   user: string;
   message: string;
   seconds: number;

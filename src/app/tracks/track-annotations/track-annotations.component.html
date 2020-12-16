@@ -2,11 +2,19 @@
 
   <div *ngFor="let annotation of annotations$ | async" class="annotation" (click)="annotationClicked(annotation)">
     <div class="header">
-      <span class="user">
-        {{ annotation.user }}
-      </span>
-      <span class="time">
-        {{ annotation.seconds }}
+      <div>
+        <span class="user">
+          {{ annotation.user }}
+        </span>
+        -
+        <span class="time">
+          {{ annotation.seconds }} seconds
+        </span>
+      </div>
+
+      <span class="delete">
+        <button class="hover:text-red-400 text-sm" (click)="deleteAnnotation(annotation); $event.stopPropagation()">
+        <i-feather name="trash" style="height: 1.125rem; width: 1.125rem;"></i-feather></button>
       </span>
 
     </div>
