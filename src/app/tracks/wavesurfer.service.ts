@@ -1,5 +1,9 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import WaveSurfer from 'wavesurfer.js';
+import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
+import MinimapPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.minimap.min.js';
+import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
+
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ResizeObserverService } from '../core/services/resize-observer.service';
 import { debounceTime } from 'rxjs/operators';
@@ -18,7 +22,7 @@ export class WaveSurferService implements OnDestroy {
     private resizeObserver: ResizeObserverService,
   ) {}
 
-  initialize(element: HTMLElement, url, peaks?): void {
+  initialize(element: HTMLElement, url: string, peaks): void {
     this.wavesurfer = WaveSurfer.create({
       backend: 'MediaElement',
       container: element,
@@ -27,7 +31,19 @@ export class WaveSurferService implements OnDestroy {
       barRadius: 3,
       cursorWidth: 1,
       height: 200,
-      barGap: 3
+      barGap: 3,
+      plugins: [
+        CursorPlugin.create({
+          showTime: true,
+          opacity: 1,
+          customShowTimeStyle: {
+            'background-color': '#000',
+            color: '#fff',
+            padding: '2px',
+            'font-size': '10px',
+          },
+        }),
+      ]
     });
 
     this.subscriptions.add(
