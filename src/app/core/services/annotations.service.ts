@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { TracksService } from './tracks.service';
 import { AnnotationsApiService } from './api/annotations-api.service';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { Annotation, CreateAnnotationRequest } from '../models/annotation';
 import { StateService } from './state/state.service';
 
@@ -27,7 +27,6 @@ export class AnnotationsService extends StateService<AnnotationsState>{
 
 
     this.tracksService.selectedTrack$.pipe(
-      filter((track) => !!track),
       switchMap((track) => track ? this.annotationsApi.listTrackAnnotations(track.id) : of([])),
     ).subscribe((annotations) => {
       this.setState({ annotations });
