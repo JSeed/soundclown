@@ -49,7 +49,7 @@ export class WaveSurferService implements OnDestroy {
   }
 
   jumpToSeconds(seconds: number): void {
-    this.wavesurfer.play(seconds);
+    this.wavesurfer.setCurrentTime(seconds);
   }
 
   ngOnDestroy(): void {
