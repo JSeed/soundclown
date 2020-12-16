@@ -1,8 +1,9 @@
-import { AfterContentInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AfterContentInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { TracksService } from '../../core/services/tracks.service';
-import { filter, take } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { WaveSurferService } from '../wavesurfer.service';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class TrackComponent implements AfterContentInit {
   constructor(
     public tracksService: TracksService,
     private waveSurferService: WaveSurferService,
+    private http: HttpClient,
   ) {}
 
   togglePlayback(): void {
@@ -31,9 +33,13 @@ export class TrackComponent implements AfterContentInit {
     this.tracksService.selectedTrack$.pipe(
       // TODO -  BUG - we shouldnt have to filter this...
       filter((val) => !!val),
+      switchMap((track) => this.http.get(track.peaksUrl).pipe(
+        catchError(() => of(undefined)),
+        map((peaks) => ({ track, peaks })),
+      )),
       take(1),
-    ).subscribe((track) => {
-      this.waveSurferService.initialize(this.waveformElement.nativeElement, track.url);
+    ).subscribe(({ track, peaks }) => {
+      this.waveSurferService.initialize(this.waveformElement.nativeElement, track.mediaUrl, peaks);
     });
   }
 }

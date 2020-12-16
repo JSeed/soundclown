@@ -4,6 +4,7 @@ const { success } = require('./util/api-helpers');
 const { urlEncode } = require('./util/base64');
 
 const TRACK_MEDIA_PREFIX = 'tracks/';
+const TRACK_PEAKS_PREFIX = 'peaks/';
 
 
 const getTrackList = async () => {
@@ -12,11 +13,15 @@ const getTrackList = async () => {
   const tracks = await Promise.all(
     objects.Contents
       .filter((object) => object.Size > 0)
-      .map(async (object) => ({
-        id: urlEncode(object.Key),
-        title: object.Key.split('/').pop(),
-        url: await bucket.getSignedDownloadUrl(object),
-      })));
+      .map(async (object) => {
+        const fileName = object.Key.split('/').slice(1).join('/');
+        return {
+          id: urlEncode(fileName),
+          title: fileName,
+          mediaUrl: await bucket.getSignedDownloadUrl(object.Key),
+          peaksUrl: await bucket.getSignedDownloadUrl(`${TRACK_PEAKS_PREFIX}${fileName}.json`),
+        };
+      }));
 
   return success(tracks);
 }

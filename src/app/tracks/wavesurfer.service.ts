@@ -10,12 +10,11 @@ export class WaveSurferService implements OnDestroy {
   private playingSubject = new BehaviorSubject(false);
   playing$ = this.playingSubject.asObservable();
 
-  initialize(element: HTMLElement, url): void {
+  initialize(element: HTMLElement, url, peaks?): void {
     this.wavesurfer = WaveSurfer.create({
+      backend: 'MediaElement',
       container: element,
-      // waveColor: '#D9DCFF',
       progressColor: '#a78bfa',
-      // cursorColor: '#4353FF',
       barWidth: 4,
       barRadius: 3,
       cursorWidth: 1,
@@ -25,16 +24,15 @@ export class WaveSurferService implements OnDestroy {
 
     this.wavesurfer.on('pause', () => this.playingSubject.next(false));
     this.wavesurfer.on('play', () => this.playingSubject.next(true));
-    this.wavesurfer.on('seek', () => this.playingSubject.next(false));
     this.wavesurfer.on('finish', () => this.playingSubject.next(false));
-    this.wavesurfer.load(url);
+    this.wavesurfer.load(url, peaks);
   }
 
-  isPlaying() {
+  isPlaying(): boolean {
     return this.wavesurfer.isPlaying();
   }
 
-  togglePlayback() {
+  togglePlayback(): void {
     this.wavesurfer.playPause();
   }
 

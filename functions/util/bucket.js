@@ -10,7 +10,7 @@ exports.listObjects = async (prefix) => s3.listObjectsV2({
 }).promise();
 
 
-exports.getSignedDownloadUrl = async (object) => s3.getSignedUrlPromise('getObject', {
+exports.getSignedDownloadUrl = async (key) => s3.getSignedUrlPromise('getObject', {
   Bucket: process.env.BUCKET_NAME,
-  Key: object.Key,
+  Key: key,
 });
