@@ -1,42 +1,58 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { TracksApiService } from './api/tracks-api.service';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { Track } from '../models/track';
-import { filter, map, shareReplay } from 'rxjs/operators';
+import { filter, map, shareReplay, tap } from 'rxjs/operators';
 import { NavigationStart, Router } from '@angular/router';
+import { StateService } from './state/state.service';
+
+interface TracksState {
+  tracks: Track[];
+  selectedTrackId: string;
+}
+
+const initialState: TracksState = {
+  tracks: [],
+  selectedTrackId: null,
+};
 
 @Injectable({ providedIn: 'root' })
-export class TracksService {
+export class TracksService extends StateService<TracksState> implements OnDestroy {
 
-  tracks$: Observable<Track[]>;
-  selectedTrack$: Observable<Track>;
-  private selectedTrackId$;
+  tracks$: Observable<Track[]> = this.select(state => state.tracks);
+  selectedTrackId$: Observable<string> = this.select(state => state.selectedTrackId);
+  selectedTrack$: Observable<Track> = this.select((state) => {
+    return this.state.tracks.find((track) => track.id === state.selectedTrackId);
+  });
+
+
+  private subscriptions = new Subscription();
 
   constructor(
     private tracksApi: TracksApiService,
     private router: Router,
   ) {
-    this.selectedTrackId$ = this.router.events.pipe(
+    super(initialState);
+
+    this.load();
+
+    this.subscriptions.add(this.router.events.pipe(
       filter<NavigationStart>((event) => event instanceof NavigationStart),
-      map((event) => {
-        const matches = event.url.match('\/tracks\/(.+)');
-        return matches ? matches[1] : null;
-      }),
-      shareReplay(1),
-    );
+    ).subscribe((event) => {
 
-    this.tracks$ = this.tracksApi.getTrackList().pipe(
-      shareReplay(1),
-    );
+      const trackId = this.parseUrlTrackId(event.url);
+      if (trackId) {
+        this.setState({ selectedTrackId: trackId });
+      } else if (!trackId && this.state.selectedTrackId) {
+        this.setState({ selectedTrackId: null });
+      }
+    }));
 
-    this.selectedTrack$ = combineLatest([
-      this.tracks$,
-      this.selectedTrackId$,
-    ]).pipe(
-      map(([tracks, id]) => tracks.find((track) => track.id === id)),
-    );
   }
 
+  load(): void {
+    this.subscriptions.add(this.tracksApi.getTrackList().subscribe((tracks) => this.setState({ tracks })));
+  }
 
   selectTrack(track: Track): void {
     this.router.navigate(['tracks', track.id]);
@@ -44,6 +60,15 @@ export class TracksService {
 
   clearSelectedTrack(): void {
     this.router.navigate(['tracks']);
+  }
+
+  private parseUrlTrackId(url) {
+    const matches = url.match('\/tracks\/(.+)');
+    return matches ? matches[1] : null;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
 
