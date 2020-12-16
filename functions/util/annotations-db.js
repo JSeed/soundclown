@@ -32,6 +32,18 @@ exports.addAnnotation = async (annotation) => {
   return params.Item;
 }
 
+exports.deleteAnnotation = async ({trackId, annotationId}) => {
+  const params = {
+    TableName: process.env.DB_ANNOTATIONS_TABLE,
+    Key: {
+      id: annotationId,
+      trackId: trackId,
+    }
+  };
+
+  await dynamodb.delete(params).promise();
+};
+
 exports.listAnnotations = async (trackId) => {
   const params = {
     TableName: process.env.DB_ANNOTATIONS_TABLE,
