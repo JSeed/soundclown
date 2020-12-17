@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TracksService } from './core/services/tracks.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'sc-root',
@@ -8,10 +8,12 @@ import { TracksService } from './core/services/tracks.service';
 })
 export class AppComponent {
 
+  show = false;
+  isAuthenticated$ = this.authService.isAuthenticated$;
+
   constructor(
-    public tracksService: TracksService
+    public authService: AuthService,
   ) {}
 
   title = 'soundclown';
-
 }

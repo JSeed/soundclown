@@ -1,0 +1,10 @@
+<div class="bg-white shadow-lg rounded-l">
+  <div class="flex flex-col" *ngIf="user$ | async as user">
+    <span class="text-lg font-bold pt-4 px-8">{{user.nickname}}</span>
+    <span class="text-sm px-8 mb-4">{{ user.email }}</span>
+
+    <span class="hover:bg-gray-100 cursor-pointer py-4 px-8" (click)="logout()">Sign Out</span>
+  </div>
+
+
+</div>

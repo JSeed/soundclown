@@ -1,26 +1,12 @@
-<div class="flex flex-col h-full">
-
-  <nav class="bg-white">
-    <div class="mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center h-16 px-6 rounded-md font-medium text-2xl">
-
-        <ng-container *ngIf="tracksService.selectedTrack$ | async as track; else tracks">
-
-        <a class="rounded-md font-medium text-2xl cursor-pointer hover:text-purple-400" (click)="tracksService.clearSelectedTrack()">TRACKS</a>
-        <div class="arrow right mx-2" > </div>
-        <div class="rounded-md font-light text-xl">{{ track.title }}</div>
-
-        </ng-container>
-        </div>
-
-      </div>
-
-      <ng-template #tracks>
-        <span class="cursor-default">TRACKS</span>
-
-      </ng-template>
-  </nav>
-<div class="flex-1 bg-gray-100">
-  <router-outlet></router-outlet>
+<div class="bg-gray-100 h-full w-full">
+  <div class="flex flex-col h-full" *ngIf="isAuthenticated$ | async; else loader">
+    <sc-nav-bar></sc-nav-bar>
+    <div class="flex-1 bg-gray-100">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>
-</div>
+
+<ng-template #loader>
+  <sc-loader></sc-loader>
+</ng-template>

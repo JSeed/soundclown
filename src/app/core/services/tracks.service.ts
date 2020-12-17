@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { TracksApiService } from './api/tracks-api.service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { Track } from '../models/track';
-import { filter, map, shareReplay, tap } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { NavigationStart, Router } from '@angular/router';
 import { StateService } from './state/state.service';
 
@@ -37,6 +37,7 @@ export class TracksService extends StateService<TracksState> implements OnDestro
     // Set the selected track based on the router URL
     this.subscriptions.add(this.router.events.pipe(
       filter<NavigationStart>((event) => event instanceof NavigationStart),
+      startWith({ url: this.router.url }),
     ).subscribe((event) => {
 
       const trackId = this.parseUrlTrackId(event.url);

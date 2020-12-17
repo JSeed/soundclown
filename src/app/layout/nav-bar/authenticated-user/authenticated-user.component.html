@@ -1,0 +1,21 @@
+
+<div *ngIf="user$ | async as user" class="flex flex-row items-center">
+  <div (click)="isOpen = !isOpen" cdkOverlayOrigin #trigger="cdkOverlayOrigin" class="flex flex-row items-center cursor-pointer">
+    <img [src]="user.picture" class="rounded-full w-8 h-8">
+    <span class="mx-2">{{ user.nickname }}</span>
+    <i-feather name="chevron-down" style="width: 10px; height: 10px;"></i-feather>
+  </div>
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isOpen"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="cdk-overlay-background-transparent"
+    (backdropClick)="isOpen = false"
+  >
+    <sc-user-menu></sc-user-menu>
+
+  </ng-template>
+
+</div>
+
