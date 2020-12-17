@@ -1,4 +1,5 @@
 const bucket = require('./util/bucket');
+const { requireAuth } = require("./util/requireAuth");
 const { success, error } = require('./util/api-helpers');
 const { urlEncode } = require('./util/base64');
 
@@ -27,9 +28,9 @@ const getTrackList = async () => {
     console.log('getTrackList error:', err);
     return error(500, err);
   }
-}
+};
 
-exports.handler = async (event, context) => {
+exports.handler = requireAuth(async (event, context) => {
   return getTrackList();
-}
+});
 

@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~11.0.1",
     "@angular/platform-browser-dynamic": "~11.0.1",
     "@angular/router": "~11.0.1",
+    "@serverless-jwt/netlify": "^0.2.0",
     "angular-feather": "^6.0.10",
     "aws-sdk": "^2.809.0",
     "resize-observer-polyfill": "^1.5.1",

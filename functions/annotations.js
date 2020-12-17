@@ -1,5 +1,7 @@
+const { requireAuth } = require("./util/requireAuth");
 const { success, error } = require('./util/api-helpers');
 const { listAnnotations, addAnnotation, deleteAnnotation } = require('./util/annotations-db');
+
 
 const tryDb = async (fn) => {
   try {
@@ -28,7 +30,7 @@ const list = async (event) => {
   return tryDb(() => listAnnotations(trackId));
 }
 
-exports.handler = async (event, context) => {
+exports.handler = requireAuth(async (event, context) => {
   if (event.httpMethod === 'GET') {
     return list(event);
   } else if (event.httpMethod === 'POST') {
@@ -38,4 +40,4 @@ exports.handler = async (event, context) => {
   }
 
   return error(404, 'Bad route')
-}
+});
