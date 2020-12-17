@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Annotation } from 'src/app/core/models/annotation';
 import { AnnotationsService } from 'src/app/core/services/annotations.service';
 import { WaveSurferService } from '../wavesurfer.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'sc-track-annotations',
@@ -12,10 +13,12 @@ import { WaveSurferService } from '../wavesurfer.service';
 export class TrackAnnotationsComponent {
 
   annotations$: Observable<Annotation[]>;
+  user$ = this.authService.user$;
 
   constructor(
     private annotationsService: AnnotationsService,
     private waveSurfer: WaveSurferService,
+    private authService: AuthService,
   ) {
     this.annotations$ = this.annotationsService.annotations$;
   }

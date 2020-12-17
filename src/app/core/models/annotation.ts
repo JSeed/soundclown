@@ -8,7 +8,6 @@ export interface Annotation {
 }
 
 export interface CreateAnnotationRequest {
-  user: string;
   message: string;
   seconds: number;
   trackId;

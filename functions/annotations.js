@@ -14,13 +14,15 @@ const tryDb = async (fn) => {
   }
 }
 
-const create = async (event) => {
+const create = async (event, context) => {
   const annotation = JSON.parse(event.body);
+  annotation.user = context.identityContext.claims.username || 'unknown';
   // TODO - validate request body body
   return tryDb(() => addAnnotation(annotation));
 }
 
 const destroy = async (event) => {
+  // TODO - check user before deleting
   const { trackId, annotationId } = JSON.parse(event.body);
   return tryDb(() => deleteAnnotation({ trackId, annotationId }));
 }
@@ -32,11 +34,11 @@ const list = async (event) => {
 
 exports.handler = requireAuth(async (event, context) => {
   if (event.httpMethod === 'GET') {
-    return list(event);
+    return list(event, context);
   } else if (event.httpMethod === 'POST') {
-    return create(event);
+    return create(event, context);
   } else if (event.httpMethod === 'DELETE') {
-    return destroy(event);
+    return destroy(event, context);
   }
 
   return error(404, 'Bad route')

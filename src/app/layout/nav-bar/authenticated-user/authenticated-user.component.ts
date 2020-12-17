@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { ConnectedPositionStrategy, Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { UserMenuComponent } from '../user-menu/user-menu.component';
 
 @Component({
   selector: 'sc-authenticated-user',

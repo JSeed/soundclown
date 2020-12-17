@@ -33,7 +33,6 @@ export class AnnotationFormComponent implements OnInit {
       this.annotationsService.createAnnotation({
         message: this.form.get('message').value,
         seconds: this.wavesurfer.wavesurfer.getCurrentTime(),
-        user: 'unknown', // TODO - profile service
         trackId: this.trackId,
       }).subscribe(() => {
         this.form.reset();
