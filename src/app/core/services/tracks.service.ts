@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TracksApiService } from './api/tracks-api.service';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Track } from '../models/track';
-import { filter, map, shareReplay, startWith, tap } from 'rxjs/operators';
+import { filter, startWith } from 'rxjs/operators';
 import { NavigationStart, Router } from '@angular/router';
-import { StateService } from './state/state.service';
+import { StateService } from './state.service';
 
 interface TracksState {
   tracks: Track[];

@@ -1,12 +1,11 @@
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import WaveSurfer from 'wavesurfer.js';
-import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
-import MinimapPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.minimap.min.js';
-import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
-
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { ResizeObserverService } from '../core/services/resize-observer.service';
 import { debounceTime } from 'rxjs/operators';
+import WaveSurfer from 'wavesurfer.js';
+import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
+import { ResizeObserverService } from '../core/services/resize-observer.service';
+import { PlaybackStateService } from './playback-state.service';
+
 
 @Injectable()
 export class WaveSurferService implements OnDestroy {
@@ -14,12 +13,13 @@ export class WaveSurferService implements OnDestroy {
   wavesurfer: WaveSurfer;
 
   private playingSubject = new BehaviorSubject(false);
-  playing$ = this.playingSubject.asObservable();
+  playing$ = this.playbackState.playing$;
 
   private subscriptions = new Subscription();
 
   constructor(
     private resizeObserver: ResizeObserverService,
+    private playbackState: PlaybackStateService,
   ) {}
 
   initialize(element: HTMLElement, url: string, peaks): void {
@@ -50,9 +50,17 @@ export class WaveSurferService implements OnDestroy {
       this.resizeObserver.observe(element).pipe(debounceTime(100)).subscribe(() => this.wavesurfer.drawBuffer())
     );
 
-    this.wavesurfer.on('pause', () => this.playingSubject.next(false));
-    this.wavesurfer.on('play', () => this.playingSubject.next(true));
-    this.wavesurfer.on('finish', () => this.playingSubject.next(false));
+    this.wavesurfer.on('pause', () => this.playbackState.setPlaying(false));
+    this.wavesurfer.on('play', () => this.playbackState.setPlaying(true));
+    this.wavesurfer.on('finish', () => this.playbackState.setPlaying(false));
+
+    this.wavesurfer.on('audioprocess', () => {
+      const totalTime = this.wavesurfer.getDuration();
+      const currentTime = this.wavesurfer.getCurrentTime();
+      const remainingTime = totalTime - currentTime;
+
+      this.playbackState.setTimes({ totalTime, currentTime, remainingTime });
+    });
     this.wavesurfer.load(url, peaks);
   }
 

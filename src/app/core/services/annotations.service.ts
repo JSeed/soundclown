@@ -4,7 +4,7 @@ import { TracksService } from './tracks.service';
 import { AnnotationsApiService } from './api/annotations-api.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { Annotation, CreateAnnotationRequest } from '../models/annotation';
-import { StateService } from './state/state.service';
+import { StateService } from './state.service';
 
 interface AnnotationsState {
   annotations: Annotation[];
